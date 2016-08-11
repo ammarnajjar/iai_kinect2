@@ -19,7 +19,7 @@ ELSE()
   MESSAGE(ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 ENDIF()
 
-find_package(catkin REQUIRED COMPONENTS roscpp rostime std_msgs sensor_msgs message_filters cv_bridge image_transport compressed_image_transport compressed_depth_image_transport kinect2_bridge)
+find_package(catkin REQUIRED COMPONENTS roscpp rostime std_msgs sensor_msgs message_filters cv_bridge image_transport compressed_image_transport compressed_depth_image_transport kinect2_bridge message_generation)
 
 ## System dependencies are found with CMake's conventions
 find_package(OpenCV REQUIRED)
@@ -43,11 +43,31 @@ endif()
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
+
+add_message_files(
+  FILES
+  Merosy_Obj.msg
+  Vec_Obj.msg
+
+  vecObj_2d.msg
+  corner.msg
+  table_info.msg
+  obj_2d.msg
+  transform_matrix.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  kinect2_viewer
+)
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES kinect2_viewer
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
+CATKIN_DEPENDS message_runtime
 )
 
 ###########
@@ -77,6 +97,13 @@ target_link_libraries(kinect2_viewer
   ${kinect2_bridge_LIBRARIES}
 )
 
+add_executable(merosy_kinect2 src/merosy_kinect2.cpp)
+target_link_libraries(merosy_kinect2
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${kinect2_bridge_LIBRARIES}
+)
 #############
 ## Install ##
 #############
