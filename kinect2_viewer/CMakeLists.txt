@@ -97,7 +97,8 @@ target_link_libraries(kinect2_viewer
   ${kinect2_bridge_LIBRARIES}
 )
 
-add_executable(merosy_kinect2 src/merosy_kinect2.cpp)
+set (merosy_srcs src/merosy_kinect2.cpp src/Receiver.cpp)
+add_executable(merosy_kinect2 ${merosy_srcs})
 target_link_libraries(merosy_kinect2
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
